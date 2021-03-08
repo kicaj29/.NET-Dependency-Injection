@@ -1,4 +1,5 @@
 ﻿using MyLib;
+using SharedKernel;
 using System;
 
 namespace StructureMap.NET5
@@ -11,14 +12,16 @@ namespace StructureMap.NET5
 
             var cont = Container.For<BasicScanning>();
 
-            var all = cont.GetAllInstances<IService>();
+            var allServices = cont.GetAllInstances<IService>();
 
-            foreach(var i in all)
+            foreach(var i in allServices)
             {
                 i.CallMe();
             }
 
-            
+            AppointmentConfirmedEvent e = new AppointmentConfirmedEvent();
+            DomainEvents.Raise(e);
+
         }
     }
 }

@@ -6,7 +6,7 @@ namespace MyLib
     {
         public void CallMe()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("CallMe executed");
         }
     }
 }

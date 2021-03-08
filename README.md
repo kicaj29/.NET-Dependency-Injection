@@ -17,6 +17,8 @@ Same as ContainerControlledLifetimeManager, the only difference is that child co
 
 # StructureMap.NET5   
 
-[example](./StructureMap.NET5)
+[example](./StructureMap.NET5)   
+
+https://stackoverflow.com/questions/66528541/structuremap-does-not-see-types-in-asp-net-core-net5?answertab=oldest#tab-top
 
 
