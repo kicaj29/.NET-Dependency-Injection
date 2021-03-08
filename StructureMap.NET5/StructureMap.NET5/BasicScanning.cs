@@ -12,13 +12,19 @@ namespace StructureMap.NET5
     {
         public BasicScanning()
         {
-            /*Scan(_ =>
+            Scan(scan =>
             {
-                _.AddAllTypesOf(typeof(IService));
-                _.WithDefaultConventions();
-            });*/
+                // 1. Declare which assemblies to scan
+                scan.AssemblyContainingType<IService>();
 
-            For<IService>().Use<Service>();
+                // 2. Built in registration conventions
+                //scan.AddAllTypesOf<IService>().NameBy(x => x.Name.Replace("Service", ""));
+                scan.AddAllTypesOf<IService>();
+                scan.WithDefaultConventions();
+
+            });
+
+            //For<IService>().Use<Service>();
         }
     }
 }
