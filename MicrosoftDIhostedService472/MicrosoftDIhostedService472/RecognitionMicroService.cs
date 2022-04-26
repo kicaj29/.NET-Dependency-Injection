@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,11 @@ namespace MicrosoftDIhostedService472
     public class RecognitionMicroService : IHostedService
     {
         private IRecognitionManager _manager;
-        public RecognitionMicroService(IRecognitionManager manager)
+        private RecognitionSettings _settings;
+        public RecognitionMicroService(IRecognitionManager manager, IOptions<RecognitionSettings> settings)
         {
             this._manager = manager;
+            this._settings = settings.Value;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {

@@ -29,6 +29,24 @@ namespace MicrosoftDIhostedService472
                 {
                     services.AddSingleton<IRecognitionManager, RecognitionManager>();
                     services.AddHostedService<RecognitionMicroService>();
+                    services.Configure<RecognitionSettings>((RecognitionSettings settings) =>
+                    {
+                        // Options pattern: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
+                        settings.Setting1 = GetConfigValue("Setting1");
+                        settings.Setting2 = GetConfigValue("Setting2");
+                    });
                 });
+
+        private static string GetConfigValue(string key)
+        {
+            // it is typical approach to allow overwrite configuration using environment variables
+            string value = Environment.GetEnvironmentVariable(key);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                value = System.Configuration.ConfigurationManager.AppSettings[key];
+            }
+
+            return value;
+        }
     }
 }
