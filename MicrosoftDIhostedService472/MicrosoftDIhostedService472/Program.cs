@@ -15,27 +15,44 @@ namespace MicrosoftDIhostedService472
         private static ILoggerFactory _loggerFactory;
         static async Task Main(string[] args)
         {
-            _ = new LoggerConfiguration().WriteTo.Console();
+            LoggerConfiguration logConfig = new LoggerConfiguration().WriteTo.Console();
+            // Do some configuration to see if it impacts log output
+            logConfig.MinimumLevel.Is(Serilog.Events.LogEventLevel.Information);
+            Log.Logger = logConfig.CreateLogger();
+
+            // it looks that using _loggerFactory is not needed if the logger is always injected directly by DI
             /*_loggerFactory = LoggerFactory.Create(loggerFactory =>
             {
                 loggerFactory.AddSerilog();
             });*/
 
+            Console.WriteLine($"Log.Logger: {Log.Logger.GetHashCode()}");
+
 
             using (IHost host = CreateHostBuilder(args).Build())
             {
+                Console.WriteLine($"Log.Logger: {Log.Logger.GetHashCode()}");
                 using (_ = host.Services.CreateScope())
                 {
+                    Console.WriteLine("Starting...");
                     await host.RunAsync();
+                    Console.WriteLine("END");
                 }
 
             }
-            Console.WriteLine("Initialization done");
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog()
+                // if we do not pass anything then static Serilog.Log is used.
+                // I check hash code of the used instances and they are different but maybe
+                // the do some cloning.
+                // It looks that this is the case https://github.com/serilog/serilog-extensions-logging/blob/7141ae23125cbdb6b67df6f9aab1c42f1fa58366/src/Serilog.Extensions.Logging/Extensions/Logging/SerilogLogger.cs#L37
+                // because they call Serilog.Log.Logger.ForContext
+                // After checking that calling logConfig.MinimumLevel.Is(Serilog.Events.LogEventLevel.Error);
+                // really impacts log output we can be sure that Serilog.Log is used.
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton<IRecognitionManager, RecognitionManager>();
