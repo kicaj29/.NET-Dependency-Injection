@@ -18,14 +18,14 @@ namespace MicrosoftDIhostedService472
             this._manager = manager;
             this._settings = settings.Value;
         }
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<object>(null);
+            await Task.FromResult<object>(null);
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<object>(null);
+            await Task.FromResult<object>(null);
         }
     }
 }
