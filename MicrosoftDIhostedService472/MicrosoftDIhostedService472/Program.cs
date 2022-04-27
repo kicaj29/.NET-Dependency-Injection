@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +12,16 @@ namespace MicrosoftDIhostedService472
 {
     class Program
     {
+        private static ILoggerFactory _loggerFactory;
         static async Task Main(string[] args)
         {
+            _ = new LoggerConfiguration().WriteTo.Console();
+            /*_loggerFactory = LoggerFactory.Create(loggerFactory =>
+            {
+                loggerFactory.AddSerilog();
+            });*/
+
+
             using (IHost host = CreateHostBuilder(args).Build())
             {
                 using (_ = host.Services.CreateScope())
@@ -25,6 +35,7 @@ namespace MicrosoftDIhostedService472
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton<IRecognitionManager, RecognitionManager>();
